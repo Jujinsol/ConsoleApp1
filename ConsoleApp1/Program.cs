@@ -130,6 +130,7 @@ namespace ConsoleApp1
         {
             while (true)
             {
+
                 Monster monster;
                 Console.WriteLine("필드에 들어왔습니다.");
                 CreateMonster(out monster);
