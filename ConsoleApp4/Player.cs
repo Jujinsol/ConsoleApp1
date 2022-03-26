@@ -41,7 +41,7 @@ namespace ConsoleApp4
 
 
             _points.Add(new Pos(posY, posX));
-            while (PosY != _board.DestY && PosX != _board.DestX)
+            while (PosY != _board.DestY || PosX != _board.DestX)
             {
                 // 1. 보는 방향 기준 오른쪽으로 갈 수 있나 확인 후 
                 if (_board.Tile[PosY + rightY[_dir], PosX + rightX[_dir]] == Board.TileType.Empty)
@@ -52,6 +52,7 @@ namespace ConsoleApp4
                     PosY = PosY + frontY[_dir];
                     PosX = PosX + frontX[_dir];
 
+                    _points.Add(new Pos(PosY, PosX));
                 }
                 // 2. 안되면 보는 방향 기준, 전진할 수 있나 확인 후
                 else if (_board.Tile[PosY + frontY[_dir], PosX + frontX[_dir]] == Board.TileType.Empty)
@@ -60,13 +61,13 @@ namespace ConsoleApp4
                     PosY = PosY + frontY[_dir];
                     PosX = PosX + frontX[_dir];
 
+                    _points.Add(new Pos(PosY, PosX));
                 }
                 // 3. 안되면 왼쪽으로 90도 회전
                 else
                 {
                     _dir = (_dir + 5) % 4;
                 }
-                
             }
         }
 

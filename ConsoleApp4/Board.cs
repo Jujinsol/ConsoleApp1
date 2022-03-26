@@ -107,10 +107,11 @@ namespace ConsoleApp4
             {
                 for (int x = 0; x < Size; x++)
                 {
-                    if (y == DestY && x == DestX)
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                    else if (y == _player.PosY && x == _player.PosX)
+                    if (y == _player.PosY && x == _player.PosX)
                         Console.ForegroundColor = ConsoleColor.Blue;
+                    else if (y == DestY && x == DestX)
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+
                     else
                         Console.ForegroundColor = GetTileColor(Tile[y, x]);
 
