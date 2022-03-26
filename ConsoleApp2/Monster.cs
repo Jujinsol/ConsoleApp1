@@ -21,27 +21,27 @@ namespace ConsoleApp2
         {
             this.type = type;
         }
-    }
 
+    }
     class Slime : Monster
     {
-        public Slime() : base(MonsterType.Slime)
+        public Slime() :base(MonsterType.Slime)
         {
-            SetInfo(15, 8);
+            SetInfo(20, 5);
         }
     }
     class Orc : Monster
     {
         public Orc() : base(MonsterType.Orc)
         {
-            SetInfo(25, 15);
+            SetInfo(25, 8);
         }
     }
     class Skeleton : Monster
     {
         public Skeleton() : base(MonsterType.Skeleton)
         {
-            SetInfo(20, 10);
+            SetInfo(22, 10);
         }
     }
 }
