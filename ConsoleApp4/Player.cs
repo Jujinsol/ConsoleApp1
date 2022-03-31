@@ -33,14 +33,68 @@ namespace ConsoleApp4
             PosY = posY;
             PosX = posX;
 
+            BFS();
 
+        }
+
+        void BFS()
+        {
+            int[] deltaY = { -1, 0, 1, 0 };
+            int[] deltaX = { 0, -1, 0, 1 };
+
+            bool[,] found = new bool[_board.Size, _board.Size];
+            Pos[,] parent = new Pos[_board.Size, _board.Size];
+
+            Queue<Pos> q = new Queue<Pos>();
+            q.Enqueue(new Pos(PosY, PosX));
+            found[PosY, PosX] = true;
+            parent[PosY, PosX] = new Pos(PosY, PosX);
+
+            while (q.Count > 0)
+            {
+                Pos pos = q.Dequeue();
+                int nowY = pos.Y;
+                int nowX = pos.X;
+                for (int i = 0; i < 4; i++)
+                {
+                    int nextY = nowY + deltaY[i];
+                    int nextX = nowX + deltaX[i];
+                    
+                    if (nextY < 0 || nextY >= _board.Size || nextX < 0 || nextX >= _board.Size)
+                        continue;
+                    if (_board.Tile[nextY, nextX] == Board.TileType.Wall)
+                        continue;
+                    if (found[nextY, nextX])
+                        continue;
+
+                    q.Enqueue(new Pos(nextY, nextX));
+                    found[nextY, nextX] = true;
+                    parent[nextY, nextX] = new Pos(nowY,nowX);
+                }
+            }
+
+            int y = _board.DestY;
+            int x = _board.DestX;
+            while (parent[y, x].Y != y || parent[y, x].X != x)
+            {
+                _points.Add(new Pos(y, x));
+                Pos pos = parent[y, x];
+                y = pos.Y;
+                x = pos.X;
+            }
+            _points.Add(new Pos(y, x));
+            _points.Reverse();
+        }
+
+        void RightHand()
+        {
             int[] frontY = new int[] { -1, 0, 1, 0 };
             int[] frontX = new int[] { 0, -1, 0, 1 };
             int[] rightY = new int[] { 0, -1, 0, 1 };
             int[] rightX = new int[] { 1, 0, -1, 0 };
 
 
-            _points.Add(new Pos(posY, posX));
+            _points.Add(new Pos(PosY, PosX));
             while (PosY != _board.DestY || PosX != _board.DestX)
             {
                 // 1. 보는 방향 기준 오른쪽으로 갈 수 있나 확인 후 
@@ -70,6 +124,7 @@ namespace ConsoleApp4
                 }
             }
         }
+
 
         const int MOVE_TICK = 10;
         int _sumTick = 0;
