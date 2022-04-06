@@ -4,57 +4,56 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp4
+namespace ConsoleApp3
 {
     internal class Board
     {
         public enum TileType
         {
-            Empty,
-            Wall
+            Wall,
+            Empty
         }
 
         public int Size { get; private set; }
         public int DestY { get; private set; }
         public int DestX { get; private set; }
+
         public TileType[,] Tile { get; private set; }
         const char Circle = '\u25cf';
-        Player _player = new Player();
-        
+        Player _player;
 
         public void Initialize(int size, Player player)
         {
+            // size는 홀수여야한다.
             if (size % 2 == 0)
                 return;
 
             Tile = new TileType[size, size];
 
+            Size = size;
+            _player = player;
+
             DestY = size - 2;
             DestX = size - 2;
 
-            _player = player;
-            Size = size;
-
-            GenerateSideWind();
+            GenerateSideWinder();
         }
 
-        public void GenerateSideWind()
+        void GenerateSideWinder()
         {
-
-            // 격자 무늬로 벽 만들기
+            // 격자로 벽 만들기
             for (int y = 0; y < Size; y++)
             {
                 for (int x = 0; x < Size; x++)
                 {
-                    if (y % 2 == 0 || x % 2 == 0) // 짝수라면
+                    if (y % 2 == 0 || x % 2 == 0)
                         Tile[y, x] = TileType.Wall;
                     else
                         Tile[y, x] = TileType.Empty;
                 }
             }
 
-            // 초록점 기준, 랜덤하게 오른쪽 혹은 아래 뚫기
-            Random random = new Random();
+            Random rand = new Random();
             for (int y = 0; y < Size; y++)
             {
                 int count = 1;
@@ -65,7 +64,6 @@ namespace ConsoleApp4
                         Tile[y, x] = TileType.Wall;
                         continue;
                     }
-
                     if (y % 2 == 0 || x % 2 == 0)
                         continue;
 
@@ -74,35 +72,38 @@ namespace ConsoleApp4
                         Tile[y, x + 1] = TileType.Empty;
                         continue;
                     }
-
                     if (x == Size - 2)
                     {
                         Tile[y + 1, x] = TileType.Empty;
                         continue;
                     }
 
+
                     if (y == Size - 2 && x == Size - 2)
                         Tile[y, x] = TileType.Empty;
 
-                    int randRoad = random.Next(0, 2);
-                    if (randRoad == 0)
+
+                    if (rand.Next(0, 2) == 0)
                     {
                         Tile[y, x + 1] = TileType.Empty;
                         count++;
                     }
                     else
                     {
-                        int randIndex = random.Next(0, count);
-                        Tile[y + 1, x - randIndex * 2] = TileType.Empty;
+                        int randNum = rand.Next(0, count);
+                        Tile[y + 1, x - randNum * 2] = TileType.Empty;
                         count = 1;
                     }
+
                 }
             }
+
         }
 
         public void Render()
         {
             ConsoleColor PrevColor = Console.ForegroundColor;
+
             for (int y = 0; y < Size; y++)
             {
                 for (int x = 0; x < Size; x++)
@@ -111,7 +112,6 @@ namespace ConsoleApp4
                         Console.ForegroundColor = ConsoleColor.Blue;
                     else if (y == DestY && x == DestX)
                         Console.ForegroundColor = ConsoleColor.Yellow;
-
                     else
                         Console.ForegroundColor = GetTileColor(Tile[y, x]);
 
@@ -119,17 +119,16 @@ namespace ConsoleApp4
                 }
                 Console.WriteLine();
             }
-            Console.ForegroundColor = PrevColor;
         }
 
         ConsoleColor GetTileColor(TileType type)
         {
             switch (type)
             {
-                case TileType.Wall:
-                    return ConsoleColor.Red;
                 case TileType.Empty:
                     return ConsoleColor.Green;
+                case TileType.Wall:
+                    return ConsoleColor.Red;
                 default:
                     return ConsoleColor.Green;
             }
