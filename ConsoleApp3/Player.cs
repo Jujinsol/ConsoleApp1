@@ -56,11 +56,14 @@ namespace ConsoleApp3
 
         void Astar()
         {
-            int[] deltaY = { -1, 0, 1, 0 };
-            int[] deltaX = { 0, -1, 0, 1 };
-            int[] cost = { 1, 1, 1, 1 };
-
+            int[] deltaY = new int[] { -1, 0 ,1, 0 };
+            int[] deltaX = new int[] { 0, -1, 0, 1 };
+            // G
+            int[] cost = new int[] { 1, 1, 1, 1 };
+            
+            // 발견 후 그 길을 지나감
             bool[,] closed = new bool[_board.Size, _board.Size];
+            // 한 번이라도 발견을 했는가? 했다면 F가 open에 들어가게 됨.
             int[,] open = new int[_board.Size, _board.Size];
 
             for (int y = 0; y < _board.Size; y++)
@@ -79,8 +82,8 @@ namespace ConsoleApp3
                 PQNode node = pq.Pop();
                 if (closed[node.Y, node.X])
                     continue;
-
                 closed[node.Y, node.X] = true;
+
                 if (node.Y == _board.DestY && node.X == _board.DestX)
                     break;
 
@@ -106,11 +109,10 @@ namespace ConsoleApp3
                     parent[nextY, nextX] = new Pos(node.Y, node.X);
                 }
             }
-
-            CalcPathFromParent(parent);
+            CalcParent(parent);
         }
 
-        void CalcPathFromParent(Pos[,] parent)
+        void CalcParent(Pos[,] parent)
         {
             int y = _board.DestY;
             int x = _board.DestX;
